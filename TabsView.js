@@ -42,6 +42,7 @@
 
     function onActiveTabChange(changedModel, value) {
         if (value === true) {
+            // make all other tabs not active
             this.collection.forEach(function (model) {
                 model !== changedModel && model.set("active", false);
             });
@@ -82,6 +83,21 @@
                 "<div class='content'></div>" +
             "</div>",
 
+        /**
+         * @constructor
+         * @param options
+         * @param {Array} [options.tabs=[]] - array of tabs
+         * @param {String} [options.active] - ID of active tab
+         * @example
+         *  var tabs = new TabsView({
+         *      active: "tab2",
+         *      tabs: [
+         *          { id: "tab1", title: "My Tab 1", content: "<div>test 1</div>" },
+         *          { id: "tab2", title: "My Tab 2", content: "<div>test 2</div>" }
+         *      ]);
+         *
+         *  document.querySelector("#someElement").appendChild(tabs.el);
+         */
         constructor: function (options) {
             Backbone.View.apply(this, arguments);
 
@@ -100,10 +116,26 @@
             typeof options.active !== "undefined" && this.setActiveTab(options.active);
         },
 
+        /**
+         * @method addTab
+         * @description Adds new tab to view
+         * @param {Object} tabObj - object representing a tab
+         * @throws {Error} Throws "Tab ID is not defined" error in case if tab ID is not defined
+         */
         addTab: function (tabObj) {
+            if (typeof tabObj.id === "undefined") {
+                throw new Error("Tab ID is not defined");
+            }
+
             this.collection.add(tabObj);
         },
 
+        /**
+         * @method removeTab
+         * @description Removes existing tab
+         * @param {String} tabId - ID of tab to remove
+         * @throws {Error} Throws "Tab doesn't exist" error in case if tab with specified ID does not exist
+         */
         removeTab: function (tabId) {
             var tab = this.collection.get(tabId);
 
@@ -114,6 +146,12 @@
             this.collection.remove(tab);
         },
 
+        /**
+         * @method setActiveTab
+         * @description Sets specified tab as active
+         * @param {String} tabId - ID of tab to remove
+         * @throws {Error} Throws "Tab doesn't exist" error in case if tab with specified ID does not exist
+         */
         setActiveTab: function (tabId) {
             var tab = this.collection.get(tabId);
 
@@ -124,12 +162,24 @@
             tab.set("active", true);
         },
 
+        /**
+         * @method getActiveTab
+         * @description Gets ID of current active tab or undefined if no tab is selected
+         * @returns {String|undefined}
+         */
         getActiveTab: function () {
             var tab = this.collection.findWhere({active: true});
 
             return tab ? tab.get("id") : undefined;
         },
 
+        /**
+         * @method setTabContent
+         * @description Sets content of specified tab
+         * @param {String} tabId
+         * @param {String|Node} content
+         * @throws {Error} Throws "Tab doesn't exist" error in case if tab with specified ID does not exist
+         */
         setTabContent: function (tabId, content) {
             var tab = this.collection.get(tabId);
 
@@ -140,6 +190,13 @@
             tab.set("content", content);
         },
 
+        /**
+         * @method setTabTitle
+         * @description Sets title of specified tab
+         * @param {String} tabId
+         * @param {String} title
+         * @throws {Error} Throws "Tab doesn't exist" error in case if tab with specified ID does not exist
+         */
         setTabTitle: function (tabId, title) {
             var tab = this.collection.get(tabId);
 
@@ -150,14 +207,10 @@
             tab.set("title", title);
         },
 
-        onTabDomEvent: function (event, handler) {
-            var self = this;
-
-            this.tabs.forEach(function (tab) {
-                tab.$el.on(event, handler.bind(self, tab.model.get("id")));
-            });
-        },
-
+        /**
+         * @method remove
+         * @description Removes TabsView from DOM and clears memory
+         */
         remove: function () {
             this.tabs.forEach(function (tab) {
                 tab.remove();

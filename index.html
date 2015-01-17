@@ -35,7 +35,6 @@
     <button id="changeTab2Content">Change content of tab2</button>
     <button id="addTab4">Add tab4</button>
     <button id="removeTab3">Remove tab3</button>
-    <button id="makeMouseoverSelection">Make tabs to be selected on mouseover</button>
 
     <script>
         var tabs = new TabsView({
@@ -59,17 +58,17 @@
             ]
         });
 
-        document.getElementById("tabsContainer").appendChild(tabs.el);
+        document.querySelector("#tabsContainer").appendChild(tabs.el);
 
-        document.getElementById("changeTab1Title").addEventListener("click", function() {
+        document.querySelector("#changeTab1Title").addEventListener("click", function() {
             tabs.setTabTitle("tab1", "Test");
         });
 
-        document.getElementById("changeTab2Content").addEventListener("click", function() {
+        document.querySelector("#changeTab2Content").addEventListener("click", function() {
             tabs.setTabContent("tab2", "<h1>TEST!!</h1>");
         });
 
-        document.getElementById("addTab4").addEventListener("click", function() {
+        document.querySelector("#addTab4").addEventListener("click", function() {
             tabs.addTab({
                 id: "tab4",
                 title: "My Tab 4",
@@ -77,14 +76,8 @@
             });
         });
 
-        document.getElementById("removeTab3").addEventListener("click", function() {
+        document.querySelector("#removeTab3").addEventListener("click", function() {
             tabs.removeTab("tab3");
-        });
-
-        document.getElementById("makeMouseoverSelection").addEventListener("click", function() {
-            tabs.onTabDomEvent('mouseover', function(tabId, event) {
-                tabs.setActiveTab(tabId);
-            });
         });
     </script>
 </body>
