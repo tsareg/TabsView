@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>TabsView sample</title>
+    <script type="text/javascript" src="./bower_components/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="./bower_components/underscore/underscore.js"></script>
+    <script type="text/javascript" src="./bower_components/backbone/backbone.js"></script>
+    <script type="text/javascript" src="TabsView.js"></script>
+    <style>
+        .tabsView > .content {
+            clear: both;
+        }
+
+        .tabsView > .tabs > .tab {
+            float: left;
+            border: 1px solid black;
+            list-style: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .tabsView > .tabs > .tab.active {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <div id="tabsContainer"></div>
+
+    <br/>
+    <br/>
+
+    <button id="changeTab1Title">Change title of tab1</button>
+    <button id="changeTab2Content">Change content of tab2</button>
+    <button id="addTab4">Add tab4</button>
+    <button id="removeTab3">Remove tab3</button>
+    <button id="makeMouseoverSelection">Make tabs to be selected on mouseover</button>
+
+    <script>
+        var tabs = new TabsView({
+            active: "tab2",
+            tabs: [
+                {
+                    id: "tab1",
+                    title: "My Tab 1",
+                    content: "<div>test 1</div>"
+                },
+                {
+                    id: "tab2",
+                    title: "My Tab 2",
+                    content: "<div>test 2</div>"
+                },
+                {
+                    id: "tab3",
+                    title: "My Tab 3",
+                    content: "<div>test 3</div>"
+                }
+            ]
+        });
+
+        document.getElementById("tabsContainer").appendChild(tabs.el);
+
+        document.getElementById("changeTab1Title").addEventListener("click", function() {
+            tabs.setTabTitle("tab1", "Test");
+        });
+
+        document.getElementById("changeTab2Content").addEventListener("click", function() {
+            tabs.setTabContent("tab2", "<h1>TEST!!</h1>");
+        });
+
+        document.getElementById("addTab4").addEventListener("click", function() {
+            tabs.addTab({
+                id: "tab4",
+                title: "My Tab 4",
+                content: "<div>test 4</div>"
+            });
+        });
+
+        document.getElementById("removeTab3").addEventListener("click", function() {
+            tabs.removeTab("tab3");
+        });
+
+        document.getElementById("makeMouseoverSelection").addEventListener("click", function() {
+            tabs.onTabDomEvent('mouseover', function(tabId, event) {
+                tabs.setActiveTab(tabId);
+            });
+        });
+    </script>
+</body>
+</html>
